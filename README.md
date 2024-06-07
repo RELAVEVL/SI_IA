@@ -4,6 +4,6 @@ Desarrollo de trabajo final del Cursos de Sistemas Inteligentes
 Integrantes : 
 
 Valer Cierto, Luis Enrique   
-Vasquez Pariona, Vania Rosa
+Vasquez Pariona, Vania Rosa <br>
 Rivera Rimac, Alexander William  
 
