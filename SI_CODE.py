@@ -1,7 +1,12 @@
+from encodings import utf_8
 import pandas as pd
+import csv
 
-# Leer el archivo CSV
-df = pd.read_csv('./1a_RUIAS.csv')
-
-# Mostrar las primeras 5 filas del dataset
-print(df.head())
+try:
+    # Intentar leer el archivo CSV con varios ajustes
+    df = pd.read_csv('./1a_RUIAS.csv', sep=';'  , encoding='utf-8', nrows=8)
+    print(df)
+    
+     
+except pd.errors.ParserError as e:
+    print(f'Error al leer el archivo CSV: {e}')
