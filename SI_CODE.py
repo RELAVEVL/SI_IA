@@ -10,3 +10,5 @@ try:
      
 except pd.errors.ParserError as e:
     print(f'Error al leer el archivo CSV: {e}')
+    
+
