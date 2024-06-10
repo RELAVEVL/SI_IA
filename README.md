@@ -64,5 +64,13 @@ TIPO_INFRACCION<br>
 <h2>3.Generamos una nueva bd </h2>
 -Para no perder la bd original, creamos un segundo, que es el que modificaremos
 
+Buscaremos la cantidad optima de clusters a formar 
+Calculando que tan similares son los individuos dentro del cluster 
+usaremos metodo de codo de jambu 
 
+
+
+Buscaremos un valor donde deje de disminuir de manera drastica 
+
+- Debemos identificar la cantidad e cluster a trabajar, esto lo apreciaremos cuando veamos en la grafica un 
  
