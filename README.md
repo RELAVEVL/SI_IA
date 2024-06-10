@@ -73,4 +73,7 @@ usaremos metodo de codo de jambu
 Buscaremos un valor donde deje de disminuir de manera drastica 
 
 - Debemos identificar la cantidad e cluster a trabajar, esto lo apreciaremos cuando veamos en la grafica un 
- 
+->segun la grafica el numero optimo  K =2
+
+
+

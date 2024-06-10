@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+import copy
 from encodings import utf_8
 from enum import UNIQUE
+from pickle import FALSE
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn import preprocessing
 from sklearn.base import TransformerMixin
@@ -47,6 +51,8 @@ columnas_seleccionadas = [
     "FECHA_FIN_SUP",
     "TIPO_INFRACCION"
 ]
+"""En esta parte binarizamos las categorisa """
+
 
 data_frame_seleccionado = data_frame_filtrado[columnas_seleccionadas]
 data_frame_seleccionado["DEPARTAMENTO"].unique()
@@ -79,8 +85,22 @@ else:
     binarizador = BinarizadorCategorico()
     data_frame_seleccionado['SUBSECTOR_ECONOMICO_BIN'] = binarizador.fit_transform(data_frame_seleccionado['SUBSECTOR_ECONOMICO'])
 
+
+# Binarizar la columna 'DEPARTAMENTO'
+one_hot_departamento = OneHotEncoder()
+departamento_bin = one_hot_departamento.fit_transform(data_frame_seleccionado[['DEPARTAMENTO']]).toarray()
+departamento_bin_df = pd.DataFrame(departamento_bin, columns=one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']))
+
+# Concatenar el DataFrame original con las nuevas columnas binarizadas de 'DEPARTAMENTO'
+data_frame_seleccionado = data_frame_seleccionado.join(departamento_bin_df)
+
 # Extraer columnas específicas
-columns_to_extract = ["DEPARTAMENTO", "ID_DOC_ADMINISTRADO"] + (["SUBSECTOR_ECONOMICO_BIN"] if unique_values == 2 else one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist())
+columns_to_extract = ["ID_DOC_ADMINISTRADO"] + one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']).tolist() + (["SUBSECTOR_ECONOMICO_BIN"] if unique_values == 2 else one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist())
+
+column_extractor = ColumnExtractor(columns=columns_to_extract)
+extracted_columns = column_extractor.transform(data_frame_seleccionado)
+
+
 column_extractor = ColumnExtractor(columns=columns_to_extract)
 extracted_columns = column_extractor.transform(data_frame_seleccionado)
 
@@ -90,10 +110,57 @@ df_final = pd.DataFrame(extracted_columns, columns=columns_to_extract)
 # Mostrar las primeras 10 filas del DataFrame resultante
 print("DataFrame Final (primeras 10 filas):")
 print(df_final.head(10))
+df_final.dropna(inplace=True)
+
+"""Normalizacion de datos """
+# Normalización
+# Simple feature scaling
+df_final['ID_DOC_ADMINISTRADO'] = df_final['ID_DOC_ADMINISTRADO'] / df_final['ID_DOC_ADMINISTRADO'].max()
+
+
+df_final.describe()
+
+"""En esta parte verificamos la cantidad optima de cluster
+segun el resultado es k =2 pero esto se modificara xq no tomamos todos los datos a anlizar 
+"""
+#Busqueda de cantidad optima de clusters 
+
+wcss = []
+
+for i in range (1, 11):
+    kmeans =KMeans(n_clusters=i, max_iter = 300)
+    kmeans.fit(df_final)
+    wcss.append(kmeans.inertia_)
+
+#Aplico K-means a la base de datos
+#Graficando los resultados de WCSS para formar el Codo de Jambú
+plt.figure(figsize=(10, 8))
+plt.plot(range(1, 11), wcss, marker='o')
+plt.title('Codo de Jambú')
+plt.xlabel('Número de Clusters')
+plt.ylabel('WCSS')
+plt.show()
+
+#segun la grafica el numero optimo  K =2
+
+"""AQui ejecutaremos el kmeans y veremos los cluster """ 
+#aplicando el metodo kmeans a la bd 
+clustering= KMeans(n_clusters=2 , max_iter=3000) #crea el modelo 
+clustering.fit(df_final) #aplicamos el modelo a la bd 
+
+KMeans(algorithm='auto',copy_x=True,init ='k-means++', max_iter=300,n_clusters=2,n_init=10,n_jobs=None,precompute_distances='auto',random_state=None,tl=0.0001,verbose=0)
+
+
+"""Agregando la clasificacion al archivo original """
+df_final['KMeans_clusters']=clustering.labels_
+df_final.head()
+
+"""Visualizando los clusters que se formaron"""
 
 
 #crear nueva bd 
-#df_final.to_csv('NRUIAS.csv')
+#df_final.to_csv('NRUIAS.csv',sep=';',index=False )
 
 #leemos la nueva bd 
 #df_RUIAS = pd.read_csv('./NRUIAS.csv', sep=';',encoding='utf_8')
+ 
