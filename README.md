@@ -5,7 +5,7 @@
 <hr>
 
 Integrantes : </br>
-Valer Cierto, Luis Enrique </br>  
+Valer Cierto, Luis Enrique  
 Vasquez Pariona, Vania Rosa </br>
 Rivera Rimac, Alexander William  
 
@@ -23,28 +23,43 @@ Pasos a seguir :
  
 <h2>2.analisamos el datset para borrar o verificar las columnas de interes para el procesamiento </h2>
 <strong>Columnas que se eliminarian </strong>
+-N
+-NOMBRE_ADMINISTRADO
+-NOMBRE_UNIDAD_FISCALIZABLE
+-NRO_EXPEDIENTE
+-NRO_RD
+-DETALLE_INFRACCION
+-TIPO_SANCION
+-ACTO_RESUELVE
+-FECHA_ACTO
+-FECHA_CORTE
+-TIPO_DOC
+-NORMA_TIPIFICADORA
+-MEDIDA_DICTADA
+-NRO_RD_MULTA
+-FECHA_RD_MULTA
+-TIPO_RECURSO_IMPUGNATIVO
+-CANTIDAD_MULT
+-CANTIDAD_INFRACCIONE
+-MULTA_EXPEDIENT
+
+-De las columnas departamento,provincia , distrito 
+2164 filas estan vacias  - > se procedera a eliminar estas filas 
+
+- Hay 18 tipos de infraciones 
 
 
 <strong> Columnas que quedarian </strong>
-TIPO_DOC  </br>
-ID_DOC_ADMINISTRADO </br>
-NOMBRE_ADMINISTRADO </br>
-SUBSECTOR_ECONOMICO </br>
-DEPARTAMENTO</br>
-PROVINCIA</br>
-DISTRITO</br>
-FECHA_RD</br>
-FECHA_INICIO_SUP</br>
-FECHA_FIN_SUP</br>
-NRO_RD_MULTA</br>
-FECHA_RD_MULTA</br>
-NORMA_TIPIFICADORA</br>
-TIPO_INFRACCION</br>
-MEDIDA_DICTADA</br>
-TIPO_RECURSO_IMPUGNATIVO</br>
-CANTIDAD_MULTA</br>
-CANTIDAD_INFRACCIONES</br>
-MULTA_EXPEDIENTE</br>
+ID_DOC_ADMINISTRADO <br>
+SUBSECTOR_ECONOMICO <br>
+DEPARTAMENTO<br>
+PROVINCIA<br>
+DISTRITO<br>
+FECHA_RD<br>
+FECHA_INICIO_SUP<br>
+FECHA_FIN_SUP<br>
+TIPO_INFRACCION<br>
+
 
 <h2>3.Generamos una nueva bd </h2>
 -Para no perder la bd original, creamos un segundo, que es el que modificaremos
