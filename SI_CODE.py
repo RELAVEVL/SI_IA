@@ -92,23 +92,28 @@ else:
 one_hot_departamento = OneHotEncoder()
 departamento_bin = one_hot_departamento.fit_transform(data_frame_seleccionado[['DEPARTAMENTO']]).toarray()
 departamento_bin_df = pd.DataFrame(departamento_bin, columns=one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']))
-
-# Concatenar el DataFrame original con las nuevas columnas binarizadas de 'DEPARTAMENTO'
 data_frame_seleccionado = data_frame_seleccionado.join(departamento_bin_df)
 
+# Binarizar la columna 'TIPO_INFRACCION'
+one_hot_infraccion = OneHotEncoder()
+infraccion_bin = one_hot_infraccion.fit_transform(data_frame_seleccionado[['TIPO_INFRACCION']]).toarray()
+infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']))
+
+# Concatenar el DataFrame original con las nuevas columnas binarizadas de 'TIPO_INFRACCION'
+data_frame_seleccionado = data_frame_seleccionado.join(infraccion_bin_df)
+
+
+
+
 # Extraer columnas específicas
-columns_to_extract = ["ID_DOC_ADMINISTRADO"] + one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']).tolist() + (["SUBSECTOR_ECONOMICO_BIN"] if unique_values == 2 else one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist())
+columns_to_extract = ["ID_DOC_ADMINISTRADO"] + one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']).tolist() + (["SUBSECTOR_ECONOMICO_BIN"] if unique_values == 2 else one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist()) + one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']).tolist()
 
 column_extractor = ColumnExtractor(columns=columns_to_extract)
 extracted_columns = column_extractor.transform(data_frame_seleccionado)
 
-
-column_extractor = ColumnExtractor(columns=columns_to_extract)
-extracted_columns = column_extractor.transform(data_frame_seleccionado)
 
 # Convertir el resultado a un DataFrame para facilidad de visualización
-df_final = pd.DataFrame(extracted_columns, columns=columns_to_extract)
-
+df_final = pd.DataFrame(extracted_columns, columns=columns_to_extract) 
 # Mostrar las primeras 10 filas del DataFrame resultante
 print("DataFrame Final (primeras 10 filas):")
 print(df_final.head(10))
@@ -118,7 +123,6 @@ df_final.dropna(inplace=True)
 # Normalización
 # Simple feature scaling
 df_final['ID_DOC_ADMINISTRADO'] = df_final['ID_DOC_ADMINISTRADO'] / df_final['ID_DOC_ADMINISTRADO'].max()
-
 
 df_final.describe()
 
@@ -143,13 +147,13 @@ plt.xlabel('Número de Clusters')
 plt.ylabel('WCSS')
 plt.show()
 
-#segun la grafica el numero optimo  K =2
+#segun la grafica el numero optimo  K =3
 
 """AQui ejecutaremos el kmeans y veremos los cluster 
 """ 
  
 #aplicando el metodo kmeans a la bd  
-kmeans= KMeans(n_clusters=2 , max_iter=3000).fit(df_final) #crea el modelo 
+kmeans= KMeans(n_clusters=3 , max_iter=3000).fit(df_final) #crea el modelo 
 centroids=kmeans.cluster_centers_
 print(centroids)
 
