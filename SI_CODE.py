@@ -59,6 +59,7 @@ data_frame_seleccionado = data_frame_filtrado[columnas_seleccionadas]
 data_frame_seleccionado["DEPARTAMENTO"].unique()
 
 # Cambiar los datos string true false
+
 class BinarizadorCategorico(preprocessing.LabelBinarizer):
     def fit(self, x, y=None):
         return super(BinarizadorCategorico, self).fit(x)
@@ -145,24 +146,28 @@ plt.show()
 #segun la grafica el numero optimo  K =2
 
 """AQui ejecutaremos el kmeans y veremos los cluster 
- 
-#aplicando el metodo kmeans a la bd 
-clustering= KMeans(n_clusters=3 , max_iter=3000) #crea el modelo 
-clustering.fit(df_final) #aplicamos el modelo a la bd 
-
-KMeans(algorithm='auto',copy_x=True,init ='k-means++', max_iter=300,n_clusters=3,n_init='auto',n_job=None,precompute_distances='auto',random_state=None,tol=0.0001,verbose=0)
 """ 
  
-"""Agregando la clasificacion al archivo original  
-df_final['KMeans_clusters']=clustering.labels_
-df_final.head()
-"""
-"""Visualizando los clusters que se formaron"""
+#aplicando el metodo kmeans a la bd  
+kmeans= KMeans(n_clusters=2 , max_iter=3000).fit(df_final) #crea el modelo 
+centroids=kmeans.cluster_centers_
+print(centroids)
+
+# Convertir el DataFrame a array de NumPy para la gráfica
+df_final_array = df_final.to_numpy()
+
+plt.scatter(df_final_array[:,0], df_final_array[:,1], c=kmeans.labels_.astype(float), s=50)
+plt.scatter(centroids[:,0], centroids[:,1], c='red', marker='*', s=50)
+plt.show()
 
 
-#crear nueva bd 
-#df_final.to_csv('NRUIAS.csv',sep=';',index=False )
+# Agregar la columna de clusters al DataFrame original
+df_final['KMeans_clusters'] = kmeans.labels_
 
-#leemos la nueva bd 
-#df_RUIAS = pd.read_csv('./NRUIAS.csv', sep=';',encoding='utf_8')
- 
+# Guardar el DataFrame con los clusters en un nuevo archivo CSV
+df_final.to_csv('NRUIAS.csv', sep=';', index=False)
+
+print("DataFrame con clusters añadido:")
+print(df_final.head())
+
+
