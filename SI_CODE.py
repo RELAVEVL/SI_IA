@@ -35,6 +35,7 @@ df_RUIAS_os = df_RUIAS_os[df_RUIAS_os['DEPARTAMENTO'] != "-"]
 
 # Departamentos a filtrar
 departamentos_interes = ["Loreto", "Ucayali", "Madre de Dios", "Amazonas", "San Martín"]
+
 # Crear una expresión regular para buscar los departamentos ignorando caracteres adicionales
 regex_pattern = '|'.join([f'.*{dept}.*' for dept in departamentos_interes])
 
@@ -144,12 +145,14 @@ plt.show()
 #segun la grafica el numero optimo  K =2
 
 """AQui ejecutaremos el kmeans y veremos los cluster 
+ 
 #aplicando el metodo kmeans a la bd 
-clustering= KMeans(n_clusters=2 , max_iter=3000) #crea el modelo 
+clustering= KMeans(n_clusters=3 , max_iter=3000) #crea el modelo 
 clustering.fit(df_final) #aplicamos el modelo a la bd 
 
-KMeans(algorithm='auto',copy_x=True,init ='k-means++', max_iter=300,n_clusters=2,n_init='auto',n_job=None,precompute_distances='auto',random_state=None,tol=0.0001,verbose=0)
+KMeans(algorithm='auto',copy_x=True,init ='k-means++', max_iter=300,n_clusters=3,n_init='auto',n_job=None,precompute_distances='auto',random_state=None,tol=0.0001,verbose=0)
 """ 
+ 
 """Agregando la clasificacion al archivo original  
 df_final['KMeans_clusters']=clustering.labels_
 df_final.head()
