@@ -17,7 +17,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
 # Nos situamos en el directorio de los datos
-#os.chdir("C:/Users/Luis/Downloads/code/workspace/SI/SI_IA")
+# os.chdir("C:/Users/Luis/Downloads/code/workspace/SI/SI_IA")
 # Leemos el csv por medio de pandas
 df_RUIAS_os = pd.read_csv('./1a_RUIAS.csv', sep=';', encoding='utf_8')
 #df_RUIAS_os.info()
@@ -41,6 +41,8 @@ regex_pattern = '|'.join([f'.*{dept}.*' for dept in departamentos_interes])
 
 # Filtrar el DataFrame para que solo contenga filas de los departamentos especificados
 data_frame_filtrado = df_RUIAS_os[df_RUIAS_os['DEPARTAMENTO'].str.contains(regex_pattern, case=False, na=False)]
+
+# Selección de columnas
 columnas_seleccionadas = [
     "ID_DOC_ADMINISTRADO", 
     "SUBSECTOR_ECONOMICO", 
@@ -57,6 +59,20 @@ columnas_seleccionadas = [
 
 data_frame_seleccionado = data_frame_filtrado[columnas_seleccionadas]
 data_frame_seleccionado["DEPARTAMENTO"].unique()
+
+# Binarización de categorías
+def binarize_column(data_frame, column_name):
+    unique_values = data_frame[column_name].nunique()
+    if unique_values > 2:
+        encoder = OneHotEncoder()
+        encoded_columns = encoder.fit_transform(data_frame[[column_name]]).toarray()
+        encoded_columns_df = pd.DataFrame(encoded_columns, columns=encoder.get_feature_names_out([column_name]))
+    else:
+        encoder = LabelBinarizer()
+        encoded_columns = encoder.fit_transform(data_frame[column_name])
+        encoded_columns_df = pd.DataFrame(encoded_columns, columns=[f"{column_name}_BIN"])
+    return encoded_columns_df
+
 
 # Cambiar los datos string true false
 
