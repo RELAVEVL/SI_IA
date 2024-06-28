@@ -74,6 +74,7 @@ def binarize_column(data_frame, column_name):
     return encoded_columns_df
 
 
+
 # Cambiar los datos string true false
 
 class BinarizadorCategorico(preprocessing.LabelBinarizer):
@@ -117,8 +118,6 @@ infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_
 
 # Concatenar el DataFrame original con las nuevas columnas binarizadas de 'TIPO_INFRACCION'
 data_frame_seleccionado = data_frame_seleccionado.join(infraccion_bin_df)
-
-
 
 
 # Extraer columnas específicas
