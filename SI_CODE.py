@@ -61,17 +61,17 @@ data_frame_seleccionado = data_frame_filtrado[columnas_seleccionadas]
 data_frame_seleccionado["DEPARTAMENTO"].unique()
 
 # Binarización de categorías
-def binarize_column(data_frame, column_name):
-    unique_values = data_frame[column_name].nunique()
-    if unique_values > 2:
-        encoder = OneHotEncoder()
-        encoded_columns = encoder.fit_transform(data_frame[[column_name]]).toarray()
-        encoded_columns_df = pd.DataFrame(encoded_columns, columns=encoder.get_feature_names_out([column_name]))
+def binarizar_columna(data_frame, nombre_columna):
+    valores_unicos = data_frame[nombre_columna].nunique()
+    if valores_unicos > 2:
+        codificador = OneHotEncoder()
+        columnas_codificadas = codificador.fit_transform(data_frame[[nombre_columna]]).toarray()
+        df_columnas_codificadas = pd.DataFrame(columnas_codificadas, columns=codificador.get_feature_names_out([nombre_columna]))
     else:
-        encoder = LabelBinarizer()
-        encoded_columns = encoder.fit_transform(data_frame[column_name])
-        encoded_columns_df = pd.DataFrame(encoded_columns, columns=[f"{column_name}_BIN"])
-    return encoded_columns_df
+        codificador = LabelBinarizer()
+        columnas_codificadas = codificador.fit_transform(data_frame[nombre_columna])
+        df_columnas_codificadas = pd.DataFrame(columnas_codificadas, columns=[f"{nombre_columna}_BIN"])
+    return df_columnas_codificadas
 
 
 # Cambiar los datos string true false
