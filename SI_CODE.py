@@ -17,10 +17,10 @@ from sklearn.compose import ColumnTransformer
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
-# Leer el archivo CSV
+# Para leer el archivo CSV
 df_RUIAS_os = pd.read_csv('./1a_RUIAS.csv', sep=';', encoding='utf_8')
 
-# Eliminar columnas innecesarias
+# Eliminamos columnas innecesarias
 columns_to_drop = [
     "N", "NOMBRE_ADMINISTRADO", "NOMBRE_UNIDAD_FISCALIZABLE", "NRO_EXPEDIENTE", "NRO_RD", "DETALLE_INFRACCION",
     "TIPO_SANCION", "ACTO_RESUELVE", "FECHA_ACTO", "FECHA_CORTE", "TIPO_DOC", "NORMA_TIPIFICADORA", "MEDIDA_DICTADA",
@@ -28,10 +28,10 @@ columns_to_drop = [
 ]
 df_RUIAS_os.drop(columns=columns_to_drop, inplace=True)
 
-# Eliminar filas donde 'DEPARTAMENTO' es "-"
+# Eliminamos las filas donde 'DEPARTAMENTO' es "-"
 df_RUIAS_os = df_RUIAS_os[df_RUIAS_os['DEPARTAMENTO'] != "-"]
 
-# Filtrar departamentos
+# Filtramos departamentos
 departamentos_interes = ["Loreto", "Ucayali", "Madre de Dios", "Amazonas", "San Martín"]
 regex_pattern = '|'.join([f'.*{dept}.*' for dept in departamentos_interes])
 data_frame_filtrado = df_RUIAS_os[df_RUIAS_os['DEPARTAMENTO'].str.contains(regex_pattern, case=False, na=False)]
@@ -64,7 +64,7 @@ class ColumnExtractor(TransformerMixin):
     def fit(self, x, y=None, **fit_params):
         return self
 
-# Verificar si hay más de dos categorías en la columna
+# Verificamos si hay más de dos categorías en la columna
 valores_unicos = data_frame_seleccionado['SUBSECTOR_ECONOMICO'].nunique()
 if valores_unicos > 2:
     codificador_one_hot = OneHotEncoder()
@@ -75,16 +75,31 @@ else:
     binarizador = BinarizadorCategorico()
     data_frame_seleccionado['SUBSECTOR_ECONOMICO_BIN'] = binarizador.fit_transform(data_frame_seleccionado['SUBSECTOR_ECONOMICO'])
 
-# Binarizar la columna 'DEPARTAMENTO'
+# Binarizamos la columna 'DEPARTAMENTO'
 one_hot_departamento = OneHotEncoder()
 departamento_bin = one_hot_departamento.fit_transform(data_frame_seleccionado[['DEPARTAMENTO']]).toarray()
 departamento_bin_df = pd.DataFrame(departamento_bin, columns=one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']))
 data_frame_seleccionado = data_frame_seleccionado.join(departamento_bin_df)
 
-# Binarizar la columna 'TIPO_INFRACCION'
+# Binarizamos la columna 'TIPO_INFRACCION'
 one_hot_infraccion = OneHotEncoder()
 infraccion_bin = one_hot_infraccion.fit_transform(data_frame_seleccionado[['TIPO_INFRACCION']]).toarray()
 infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']))
 
-# Concatenar el DataFrame original con las nuevas columnas binarizadas de 'TIPO_INFRACCION'
+# Concatenamos el DataFrame original con las nuevas columnas binarizadas de 'TIPO_INFRACCION'
 data_frame_seleccionado = data_frame_seleccionado.join(infraccion_bin_df)
+
+# Extraemos las columnas específicas
+columns_to_extract = ["ID_DOC_ADMINISTRADO"] + one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']).tolist() + (["SUBSECTOR_ECONOMICO_BIN"] if valores_unicos == 2 else codificador_one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist()) + one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']).tolist()
+
+column_extractor = ColumnExtractor(columns=columns_to_extract)
+extracted_columns = column_extractor.transform(data_frame_seleccionado)
+
+# Convertimos el resultado a un DataFrame para facilidad de visualización
+df_final = pd.DataFrame(extracted_columns, columns=columns_to_extract)
+
+# Mostramos las primeras 10 filas del DataFrame resultante
+print("DataFrame Final (primeras 10 filas):")
+print(df_final.head(10))
+df_final.dropna(inplace=True)
+
