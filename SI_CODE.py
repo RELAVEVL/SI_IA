@@ -119,8 +119,6 @@ infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_
 data_frame_seleccionado = data_frame_seleccionado.join(infraccion_bin_df)
 
 
-
-
 # Extraer columnas específicas
 columns_to_extract = ["ID_DOC_ADMINISTRADO"] + one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']).tolist() + (["SUBSECTOR_ECONOMICO_BIN"] if unique_values == 2 else one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']).tolist()) + one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']).tolist()
 
