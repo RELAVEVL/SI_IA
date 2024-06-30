@@ -63,3 +63,14 @@ class ColumnExtractor(TransformerMixin):
         return x[self.columns].to_numpy()
     def fit(self, x, y=None, **fit_params):
         return self
+
+# Verificar si hay más de dos categorías en la columna
+valores_unicos = data_frame_seleccionado['SUBSECTOR_ECONOMICO'].nunique()
+if valores_unicos > 2:
+    codificador_one_hot = OneHotEncoder()
+    columnas_codificadas = codificador_one_hot.fit_transform(data_frame_seleccionado[['SUBSECTOR_ECONOMICO']]).toarray()
+    columnas_codificadas_df = pd.DataFrame(columnas_codificadas, columns=codificador_one_hot.get_feature_names_out(['SUBSECTOR_ECONOMICO']))
+    data_frame_seleccionado = data_frame_seleccionado.join(columnas_codificadas_df)
+else:
+    binarizador = BinarizadorCategorico()
+    data_frame_seleccionado['SUBSECTOR_ECONOMICO_BIN'] = binarizador.fit_transform(data_frame_seleccionado['SUBSECTOR_ECONOMICO'])
