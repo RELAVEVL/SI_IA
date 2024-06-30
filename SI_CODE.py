@@ -103,3 +103,8 @@ print("DataFrame Final (primeras 10 filas):")
 print(df_final.head(10))
 df_final.dropna(inplace=True)
 
+# Realizamos la normalización de datos haciendo uso del método Simple feature scaling
+df_final['ID_DOC_ADMINISTRADO'] = df_final['ID_DOC_ADMINISTRADO'] / df_final['ID_DOC_ADMINISTRADO'].max()
+
+df_final.describe()
+
