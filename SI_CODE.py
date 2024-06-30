@@ -46,3 +46,20 @@ columnas_seleccionadas = [
 data_frame_seleccionado = data_frame_filtrado[columnas_seleccionadas]
 data_frame_seleccionado["DEPARTAMENTO"].unique()
 
+# Cambiamos los datos string a true false
+
+class BinarizadorCategorico(preprocessing.LabelBinarizer):
+    def fit(self, x, y=None):
+        return super(BinarizadorCategorico, self).fit(x)
+    def transform(self, x, y=None):
+        return super(BinarizadorCategorico, self).transform(x)
+    def fit_transform(self, x, y=None):
+        return super(BinarizadorCategorico, self).fit(x).transform(x)
+
+class ColumnExtractor(TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+    def transform(self, x, **transform_params):
+        return x[self.columns].to_numpy()
+    def fit(self, x, y=None, **fit_params):
+        return self
