@@ -108,3 +108,20 @@ df_final['ID_DOC_ADMINISTRADO'] = df_final['ID_DOC_ADMINISTRADO'] / df_final['ID
 
 df_final.describe()
 
+"""En esta parte verificamos la cantidad óptima de clusters.
+   Segun el resultado es k =2 pero esto se modificara ya que no tomamos todos los datos a analizar 
+"""
+wcss = []
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, max_iter=300)
+    kmeans.fit(df_final)
+    wcss.append(kmeans.inertia_)
+
+#Aplicamos K-Means a la base de datos
+# Graficamos los resultados de WCSS para formar el codo de Jambú
+plt.figure(figsize=(10, 8))
+plt.plot(range(1, 11), wcss, marker='o')
+plt.title('Codo de Jambú')
+plt.xlabel('Número de Clusters')
+plt.ylabel('WCSS')
+plt.show()
