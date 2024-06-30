@@ -74,3 +74,15 @@ if valores_unicos > 2:
 else:
     binarizador = BinarizadorCategorico()
     data_frame_seleccionado['SUBSECTOR_ECONOMICO_BIN'] = binarizador.fit_transform(data_frame_seleccionado['SUBSECTOR_ECONOMICO'])
+
+# Binarizar la columna 'DEPARTAMENTO'
+one_hot_departamento = OneHotEncoder()
+departamento_bin = one_hot_departamento.fit_transform(data_frame_seleccionado[['DEPARTAMENTO']]).toarray()
+departamento_bin_df = pd.DataFrame(departamento_bin, columns=one_hot_departamento.get_feature_names_out(['DEPARTAMENTO']))
+data_frame_seleccionado = data_frame_seleccionado.join(departamento_bin_df)
+
+# Binarizar la columna 'TIPO_INFRACCION'
+one_hot_infraccion = OneHotEncoder()
+infraccion_bin = one_hot_infraccion.fit_transform(data_frame_seleccionado[['TIPO_INFRACCION']]).toarray()
+infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']))
+
