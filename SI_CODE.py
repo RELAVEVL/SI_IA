@@ -86,3 +86,5 @@ one_hot_infraccion = OneHotEncoder()
 infraccion_bin = one_hot_infraccion.fit_transform(data_frame_seleccionado[['TIPO_INFRACCION']]).toarray()
 infraccion_bin_df = pd.DataFrame(infraccion_bin, columns=one_hot_infraccion.get_feature_names_out(['TIPO_INFRACCION']))
 
+# Concatenar el DataFrame original con las nuevas columnas binarizadas de 'TIPO_INFRACCION'
+data_frame_seleccionado = data_frame_seleccionado.join(infraccion_bin_df)
