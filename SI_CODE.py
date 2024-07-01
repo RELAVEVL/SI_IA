@@ -117,7 +117,7 @@ for i in range(1, 11):
     kmeans.fit(df_final)
     wcss.append(kmeans.inertia_)
 
-#Aplicamos K-Means a la base de datos
+# Aplicamos K-Means a la base de datos
 # Graficamos los resultados de WCSS para formar el codo de Jambú
 plt.figure(figsize=(10, 8))
 plt.plot(range(1, 11), wcss, marker='o')
@@ -125,3 +125,11 @@ plt.title('Codo de Jambú')
 plt.xlabel('Número de Clusters')
 plt.ylabel('WCSS')
 plt.show()
+
+'''Observando la gráfica el número óptimo es K= 3'''
+
+# Aplicamos el método K-Means a la base de datos
+kmeans= KMeans(n_clusters=3 , max_iter=3000).fit(df_final) #crea el modelo 
+centroids=kmeans.cluster_centers_
+print(centroids)
+
