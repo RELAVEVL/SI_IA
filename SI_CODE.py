@@ -129,7 +129,14 @@ plt.show()
 '''Observando la gráfica el número óptimo es K= 3'''
 
 # Aplicamos el método K-Means a la base de datos
-kmeans= KMeans(n_clusters=3 , max_iter=3000).fit(df_final) #crea el modelo 
+kmeans= KMeans(n_clusters=3 , max_iter=3000).fit(df_final) #Crea el modelo 
 centroids=kmeans.cluster_centers_
 print(centroids)
+
+# Convertimos el DataFrame a array de NumPy para la gráfica
+df_final_array = df_final.to_numpy()
+
+plt.scatter(df_final_array[:,0], df_final_array[:,1], c=kmeans.labels_.astype(float), s=50)
+plt.scatter(centroids[:,0], centroids[:,1], c='red', marker='*', s=50)
+plt.show()
 
