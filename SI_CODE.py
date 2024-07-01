@@ -143,3 +143,9 @@ plt.show()
 # Agregamos la columna de clusters al DataFrame original
 df_final['KMeans_clusters'] = kmeans.labels_
 
+# Guardamos el DataFrame con los clusters en un nuevo archivo CSV
+df_final.to_csv('NRUIAS.csv', sep=';', index=False)
+
+print("DataFrame con clusters añadido: ")
+print(df_final.head())
+
