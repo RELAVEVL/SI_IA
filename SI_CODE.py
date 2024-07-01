@@ -140,3 +140,6 @@ plt.scatter(df_final_array[:,0], df_final_array[:,1], c=kmeans.labels_.astype(fl
 plt.scatter(centroids[:,0], centroids[:,1], c='red', marker='*', s=50)
 plt.show()
 
+# Agregamos la columna de clusters al DataFrame original
+df_final['KMeans_clusters'] = kmeans.labels_
+
